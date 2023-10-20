@@ -275,7 +275,7 @@ function [x, y] = DifferentialManchester(Data)
     T = length(Data); % Length of the data
     x = 0:0.01:T; % Time vector
     y = zeros(1, length(x)); % Signal vector
-    curr_level = -1; % Initialize current level as low voltage
+    curr_level = 1; % Initialize current level to high voltage
 
     for i = 1:T
         % Find the indices for the current bit duration
@@ -289,19 +289,19 @@ function [x, y] = DifferentialManchester(Data)
 
         if Data(i) == 1
             % For '1', no transition at the start
-            y(indices(1:last_index)) = -curr_level;
+            y(indices(1:last_index)) = curr_level;
 
-            % Then transition in the middle
+            % Then transition in the middle to the opposite level
             curr_level = -curr_level;
-            y(indices(last_index+1:end)) = -curr_level;
+            y(indices(last_index+1:end)) = curr_level;
         else
             % For '0', transition at the start
             curr_level = -curr_level;
-            y(indices(1:last_index)) = -curr_level;
-            
-            % Then transition in the middle
+            y(indices(1:last_index)) = curr_level;
+
+            % Then transition in the middle back to the original level
             curr_level = -curr_level;
-            y(indices(last_index+1:end)) = -curr_level;
+            y(indices(last_index+1:end)) = curr_level;
         end
     end
 end
@@ -343,5 +343,4 @@ end
         end
     end
 end
-
 
